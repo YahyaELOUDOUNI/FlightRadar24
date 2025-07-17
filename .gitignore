@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.log
+*.pid
+
+# Environnement virtuel
+.venv/
+venv/
+venv39/
+
+# Airflow & autres fichiers SQLite
+airflow.db
+
+# Fichiers secrets
+.env
+
+# Docker 
+Dockerfile
+
