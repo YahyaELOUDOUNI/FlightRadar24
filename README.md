@@ -66,7 +66,6 @@ Flight_radar_ETL/
 - **FlightRadar24 API** (librairie `FlightRadarAPI`)
 - **pandas** (EDA + nettoyage)
 - **CRON Python** (orchestration via boucle infinie avec `sleep`)
-- **Airflow** (orchestration toutes les 2h) ( Abondonné pour le moment)
 - **Parquet** (stockage optimisé)  ( Abondonné pour le moment)
 - **PySpark** (analyses distribuées)(3.5.0)
 - **Logging Python** (observabilité)
@@ -89,11 +88,6 @@ while True:
     time.sleep(2 * 60 * 60)  # 2 heures
 ```
 ---
-
-## 🔁 Orchestration via Airflow ( Pas utilisé pour le moment )
-
-Le fichier `scheduler/flightradar_dag.py` définit un DAG Airflow déclenché toutes les **2 heures**, composé de 3 tâches :
-- `extract_task` → `transform_task` → `load_task`
 
 L'exécution du pipeline génère un fichier Parquet partitionné par :
 ```
@@ -160,7 +154,7 @@ run_pipeline()
 ## Observabilité
 
 - Les logs d’extraction, de transformation, de nettoyage et de sauvegarde sont disponibles à chaque run.
-- **Les logs Airflow permettent une visibilité complète de l’exécution**. ( Ou les logs du Cronjob python)
+- **Les logs Cronjob python permettent une visibilité complète de l’exécution**.
 
 ---
 
@@ -187,9 +181,8 @@ Ou bien lancer le notebook Flight_radar_ETL
 
 ## Améliorations possibles
 
-- Utilisation d'un systéme de stockage en base de données ( postgre par ex) et remplacer le Cronjob Python par un orchestrateur comme Airflow
-- Dashboard en live via **Grafana** ou **Tableau** 
-- Monitoring via Grafana / Prometheus
+- Utilisation d'un systéme de stockage en base de données ( récupération de la date et heure de décollage et atterissage de chaque aeronef)
+- Dashboard en live via **Tableau** ou **Power BI** 
 
 ---
 
@@ -206,17 +199,14 @@ Ou bien lancer le notebook Flight_radar_ETL
       - sauvegarde en CSV dans Flights/rawzone/...
 
 
-3. Le script spark_analysis.py lit le dernier fichier CSV et affiche les résultats métiers
+3. Le script spark_analysis.py lit le dernier fichier CSV et affiche les indicateurs métiers (KPIs)
 
 
 ## Remarques
 
-- J’ai opté pour un cronjob Python temporaire à la place d’Airflow, en raison de contraintes de compatibilité (notamment avec WSL).  
-  Une version orchestrée via Airflow sera proposée dans une future branche.
-
 - J’ai utilisé des fichiers CSV dans cette première version afin d'observer concrètement les différences avec le format Parquet : taille des fichiers, vitesse de traitement, intégration avec Spark, etc.  
   Le format Parquet, orienté colonne, permet une réduction significative de la taille des fichiers, un accès plus rapide aux données lors des agrégations, ainsi qu’un meilleur support des types de données.  
-  Une version optimisée du pipeline, exploitant le format Parquet, sera proposée dans une prochaine branche.
+  Une version optimisée du pipeline, exploitant le format Parquet, pourrait être envisagée dans une prochaine branche.
 
 
 ## Authored By me 
