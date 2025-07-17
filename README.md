@@ -148,12 +148,6 @@ python etl/pipeline.py
 # Lancer l'analyse Spark
 python spark_analysis.py
 ```
-
-Ou depuis le notebook :
-
-```bash
-
-run_pipeline()
 ```
 ---
 
